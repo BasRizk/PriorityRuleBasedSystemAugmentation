@@ -1,0 +1,3 @@
+a,b <=> c priority 1
+a <=> d priority 2
+a <=> c priority 2
