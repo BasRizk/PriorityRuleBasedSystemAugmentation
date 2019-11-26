@@ -5,6 +5,7 @@ import java.util.List;
 
 public class Rule{
 
+	String fullStatement;
 	String name;
 	List<String> headK;
 	List<String> headR;
@@ -13,8 +14,10 @@ public class Rule{
 	List<String> body;
 	int priority;
 
-	public Rule(String name, String[] headK, String[] headR, String function,
-				 String condition, String[] body, int priority) {
+	public Rule(String fullStatement, String name,
+				String[] headK, String[] headR, String function,
+				String condition, String[] body, int priority) {
+		this.fullStatement = fullStatement;
 		this.name = name;
 		this.headK = Arrays.asList(headK);
 		if(headR != null && headR.length > 0 ) {
@@ -26,6 +29,10 @@ public class Rule{
 		this.condition = condition;
 		this.body = Arrays.asList(body);
 		this.priority = priority;
+	}
+	
+	public String getFullStatementChrComment() {
+		return "% " + fullStatement;
 	}
 	
 	public List<String> toChrIdAssign() {
@@ -52,7 +59,7 @@ public class Rule{
 		String line = name + " @ start, ";
 		line += lineWithAppendIncrementally(headK, "(ID", ")", 1);
 		if(headR != null) {
-			line += lineWithAppendIncrementally(headK, "(ID", ")", headK.size());
+			line += ", " + lineWithAppendIncrementally(headR, "(ID", ")", numOfPredicates + 1);
 			numOfPredicates += headR.size();
 		}
 		
@@ -88,11 +95,11 @@ public class Rule{
 		line += lineWithAppendIncrementally(headK, "(ID", ")", 1);
 		switch(function) {
 			case "==>":
-				line += " \\\\ " + "history(L), fire, match(" + name + ",IDs,_)";
+				line += " \\ " + "history(L), fire, match(" + name + ",IDs,_)";
 				break;
 			default:
 				if(headR != null && headR.size() > 0) {
-					line += " \\\\ " + lineWithAppendIncrementally(headR, "(ID", ")", numOfPredicates + 1) +
+					line += " \\ " + lineWithAppendIncrementally(headR, "(ID", ")", numOfPredicates + 1) + ", " +
 							"history(L),fire,match(" + name + ",IDs,_)";
 					numOfPredicates += headR.size();
 				} else {

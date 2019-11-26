@@ -5,11 +5,13 @@ public class Main {
 	public static void main(String[]args) {
 		String rulesFilepath = "CHR_RULES.rules";
 		String chrOutputFilepath = "RB_System.pl";
-		Parser system = new Parser();
+		Parser parser = new Parser();
+		ChrWriter writer;
 		try {
-			system.parse(rulesFilepath);
+			parser.parse(rulesFilepath);
 			System.out.println(rulesFilepath);
-			system.createCHR(chrOutputFilepath);
+			writer = new ChrWriter(parser.rules, chrOutputFilepath);
+			writer.write();
 			System.out.println(chrOutputFilepath);
 		} catch (NumberFormatException e) {
 			e.printStackTrace();
